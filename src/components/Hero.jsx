@@ -5,9 +5,30 @@ const Hero = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email) setIsSubmitted(true);
+    if (!email) return;
+
+    try {
+      // Replace this URL with your actual endpoint (e.g., Formspree, SheetDB, or Web3Forms)
+      const response = await fetch('https://formspree.io/f/xkopeqza', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting email:', error);
+      alert('Could not send data. Please try again later.');
+    }
   };
 
   return (
